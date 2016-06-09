@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://vrcoder.github.io/</loc>
+    <lastmod>2016-06-08T13:12:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://vrcoder.github.io/about/</loc>
+    <lastmod>2016-06-08T13:12:50+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://vrcoder.github.io/privacy-policy/</loc>
+    <lastmod>2016-03-15T18:21:33-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://vrcoder.github.io/2016/03/my-second-post/</loc>
+    <lastmod>2016-03-15T18:17:56-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://vrcoder.github.io/2016/03/my-first-post/</loc>
+    <lastmod>2016-03-15T18:17:52-07:00</lastmod>
+  </url>
+  
+</urlset>
