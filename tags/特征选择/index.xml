@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>观山的世界</title>
-    <link>http://vrcoder.github.io/</link>
-    <description>Recent content on 观山的世界</description>
+    <title>特征选择 on 观山的世界</title>
+    <link>http://vrcoder.github.io/tags/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/</link>
+    <description>Recent content in 特征选择 on 观山的世界</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 10 Jun 2016 01:19:34 +0800</lastBuildDate>
-    <atom:link href="http://vrcoder.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://vrcoder.github.io/tags/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>特征选择方法之卡方检验</title>
@@ -129,26 +129,6 @@ $$χ2(t,c) = \frac{(AD-BC)^2}{(A+B)(B+D)} &amp;mdash;&amp;mdash;&amp;mdash;&amp;
 &lt;p&gt;附：给精通统计学的同学多说几句，式（1）实际上是对连续型的随机变量的差值计算公式，而我们这里统计的“文档数量“显然是离散的数值（全是整数），因此真正在统计学中计算的时候，是有修正过程的，但这种修正仍然是只影响具体的开方值，而不影响大小的顺序，故文本分类中不做这种修正。&lt;/p&gt;
 
 &lt;p&gt;原文地址：&lt;a href=&#34;http://www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html&#34;&gt;http://www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>关于我</title>
-      <link>http://vrcoder.github.io/%E5%85%B3%E4%BA%8E%E6%88%91/</link>
-      <pubDate>Wed, 08 Jun 2016 13:12:50 +0800</pubDate>
-      
-      <guid>http://vrcoder.github.io/%E5%85%B3%E4%BA%8E%E6%88%91/</guid>
-      <description>&lt;p&gt;我是官山山，山东德州人，2014年1月硕士毕业于哈尔滨工业大学深圳研究生院。&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Privacy Policy</title>
-      <link>http://vrcoder.github.io/privacy-policy/</link>
-      <pubDate>Tue, 15 Mar 2016 18:21:33 -0700</pubDate>
-      
-      <guid>http://vrcoder.github.io/privacy-policy/</guid>
-      <description>&lt;p&gt;Privacy policy here.&lt;/p&gt;
 </description>
     </item>
     
