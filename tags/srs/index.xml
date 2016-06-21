@@ -52,7 +52,7 @@
 
 &lt;h2 id=&#34;推流demo&#34;&gt;推流demo&lt;/h2&gt;
 
-&lt;p&gt;&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/article/details/47056051&#34;&gt;代码来自雷霄骅博士的博客&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/article/details/39803457&#34;&gt;代码来自雷霄骅博士的博客&lt;/a&gt;&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;/**
  * 最简单的基于FFmpeg的推流器（推送RTMP）
