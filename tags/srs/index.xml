@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Srs on 观山的世界</title>
+    <link>http://vrcoder.github.io/tags/srs/</link>
+    <description>Recent content in Srs on 观山的世界</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Jun 2016 22:03:16 +0800</lastBuildDate>
+    <atom:link href="http://vrcoder.github.io/tags/srs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>rtmp服务器搭建以及推流程序demo</title>
+      <link>http://vrcoder.github.io/2016/06/rtmp%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E6%8E%A8%E6%B5%81%E7%A8%8B%E5%BA%8Fdemo/</link>
+      <pubDate>Tue, 21 Jun 2016 22:03:16 +0800</pubDate>
+      
+      <guid>http://vrcoder.github.io/2016/06/rtmp%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E6%8E%A8%E6%B5%81%E7%A8%8B%E5%BA%8Fdemo/</guid>
+      <description>
+
+&lt;p&gt;汇总下前段时间用的工具：使用开源程序SRS和ffmpeg搭建推流程序的demo。&lt;/p&gt;
+
+&lt;h2 id=&#34;准备工作&#34;&gt;准备工作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Linux服务器一台&lt;/li&gt;
+&lt;li&gt;git（apt-get or yum install git）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/smartdu/srs&#34;&gt;srs开源程序&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ffmpeg.org/download.html&#34;&gt;ffmpeg&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;安装srs&#34;&gt;安装srs&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;git &lt;a href=&#34;https://github.com/smartdu/srs.git&#34;&gt;https://github.com/smartdu/srs.git&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;cd srs/trunk&lt;/li&gt;
+&lt;li&gt;./configure &amp;amp;&amp;amp; make&lt;/li&gt;
+&lt;li&gt;./objs/srs -c conf/srs.conf&lt;/li&gt;
+&lt;li&gt;其他详见项目&lt;a href=&#34;https://github.com/ossrs/srs/wiki&#34;&gt;wiki&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;安装ffmpeg&#34;&gt;安装ffmpeg&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;git clone &lt;a href=&#34;https://git.ffmpeg.org/ffmpeg.git&#34;&gt;https://git.ffmpeg.org/ffmpeg.git&lt;/a&gt; ffmpeg&lt;/li&gt;
+&lt;li&gt;安装yasm(apt-get or yum install yasm)&lt;/li&gt;
+&lt;li&gt;./configure &amp;ndash;enable-shared &amp;ndash;prefix=/usr/local/ffmpeg&lt;/li&gt;
+&lt;li&gt;make &amp;amp;&amp;amp; make install&lt;/li&gt;
+&lt;li&gt;vim /etc/ld.so.conf.d/libc.conf,添加/usr/local/ffmpeg/lib
+路径根据不同系统可能有差异&lt;/li&gt;
+&lt;li&gt;ldconfig,使上面的改动生效&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;推流demo&#34;&gt;推流demo&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/article/details/47056051&#34;&gt;代码来自雷霄骅博士的博客&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;/**
+ * 最简单的基于FFmpeg的推流器（推送RTMP）
+ * Simplest FFmpeg Streamer (Send RTMP)
+ * 
+ * 雷霄骅 Lei Xiaohua
+ * leixiaohua1020@126.com
+ * 中国传媒大学/数字电视技术
+ * Communication University of China / Digital TV Technology
+ * http://blog.csdn.net/leixiaohua1020
+ * 
+ * 本例子实现了推送本地视频至流媒体服务器（以RTMP为例）。
+ * 是使用FFmpeg进行流媒体推送最简单的教程。
+ *
+ * This example stream local media files to streaming media 
+ * server (Use RTMP as example). 
+ * It&#39;s the simplest FFmpeg streamer.
+ * 
+ */
+
+#include &amp;lt;stdio.h&amp;gt;
+
+#define __STDC_CONSTANT_MACROS
+
+#ifdef _WIN32
+//Windows
+extern &amp;quot;C&amp;quot;
+{
+#include &amp;quot;libavformat/avformat.h&amp;quot;
+#include &amp;quot;libavutil/mathematics.h&amp;quot;
+#include &amp;quot;libavutil/time.h&amp;quot;
+};
+#else
+//Linux...
+#ifdef __cplusplus
+extern &amp;quot;C&amp;quot;
+{
+#endif
+#include &amp;lt;libavformat/avformat.h&amp;gt;
+#include &amp;lt;libavutil/mathematics.h&amp;gt;
+#include &amp;lt;libavutil/time.h&amp;gt;
+#ifdef __cplusplus
+};
+#endif
+#endif
+
+int main(int argc, char* argv[])
+{
+	AVOutputFormat *ofmt = NULL;
+	//输入对应一个AVFormatContext，输出对应一个AVFormatContext
+	//（Input AVFormatContext and Output AVFormatContext）
+	AVFormatContext *ifmt_ctx = NULL, *ofmt_ctx = NULL;
+	AVPacket pkt;
+	const char *in_filename, *out_filename;
+	int ret, i;
+	int videoindex=-1;
+	int frame_index=0;
+	int64_t start_time=0;
+	//in_filename  = &amp;quot;cuc_ieschool.mov&amp;quot;;
+	//in_filename  = &amp;quot;cuc_ieschool.mkv&amp;quot;;
+	//in_filename  = &amp;quot;cuc_ieschool.ts&amp;quot;;
+	//in_filename  = &amp;quot;cuc_ieschool.mp4&amp;quot;;
+	//in_filename  = &amp;quot;cuc_ieschool.h264&amp;quot;;
+	in_filename  = &amp;quot;cuc_ieschool.flv&amp;quot;;//输入URL（Input file URL）
+	//in_filename  = &amp;quot;shanghai03_p.h264&amp;quot;;
+	
+	out_filename = &amp;quot;rtmp://localhost/publishlive/livestream&amp;quot;;//输出 URL（Output URL）[RTMP]
+	//out_filename = &amp;quot;rtp://233.233.233.233:6666&amp;quot;;//输出 URL（Output URL）[UDP]
+
+	av_register_all();
+	//Network
+	avformat_network_init();
+	//输入（Input）
+	if ((ret = avformat_open_input(&amp;amp;ifmt_ctx, in_filename, 0, 0)) &amp;lt; 0) {
+		printf( &amp;quot;Could not open input file.&amp;quot;);
+		goto end;
+	}
+	if ((ret = avformat_find_stream_info(ifmt_ctx, 0)) &amp;lt; 0) {
+		printf( &amp;quot;Failed to retrieve input stream information&amp;quot;);
+		goto end;
+	}
+
+	for(i=0; i&amp;lt;ifmt_ctx-&amp;gt;nb_streams; i++) 
+		if(ifmt_ctx-&amp;gt;streams[i]-&amp;gt;codec-&amp;gt;codec_type==AVMEDIA_TYPE_VIDEO){
+			videoindex=i;
+			break;
+		}
+
+	av_dump_format(ifmt_ctx, 0, in_filename, 0);
+
+	//输出（Output）
+	
+	avformat_alloc_output_context2(&amp;amp;ofmt_ctx, NULL, &amp;quot;flv&amp;quot;, out_filename); //RTMP
+	//avformat_alloc_output_context2(&amp;amp;ofmt_ctx, NULL, &amp;quot;mpegts&amp;quot;, out_filename);//UDP
+
+	if (!ofmt_ctx) {
+		printf( &amp;quot;Could not create output context\n&amp;quot;);
+		ret = AVERROR_UNKNOWN;
+		goto end;
+	}
+	ofmt = ofmt_ctx-&amp;gt;oformat;
+	for (i = 0; i &amp;lt; ifmt_ctx-&amp;gt;nb_streams; i++) {
+		//根据输入流创建输出流（Create output AVStream according to input AVStream）
+		AVStream *in_stream = ifmt_ctx-&amp;gt;streams[i];
+		AVStream *out_stream = avformat_new_stream(ofmt_ctx, in_stream-&amp;gt;codec-&amp;gt;codec);
+		if (!out_stream) {
+			printf( &amp;quot;Failed allocating output stream\n&amp;quot;);
+			ret = AVERROR_UNKNOWN;
+			goto end;
+		}
+		//复制AVCodecContext的设置（Copy the settings of AVCodecContext）
+		ret = avcodec_copy_context(out_stream-&amp;gt;codec, in_stream-&amp;gt;codec);
+		if (ret &amp;lt; 0) {
+			printf( &amp;quot;Failed to copy context from input to output stream codec context\n&amp;quot;);
+			goto end;
+		}
+		out_stream-&amp;gt;codec-&amp;gt;codec_tag = 0;
+		if (ofmt_ctx-&amp;gt;oformat-&amp;gt;flags &amp;amp; AVFMT_GLOBALHEADER)
+			out_stream-&amp;gt;codec-&amp;gt;flags |= CODEC_FLAG_GLOBAL_HEADER;
+	}
+	//Dump Format------------------
+	av_dump_format(ofmt_ctx, 0, out_filename, 1);
+	//打开输出URL（Open output URL）
+	if (!(ofmt-&amp;gt;flags &amp;amp; AVFMT_NOFILE)) {
+		ret = avio_open(&amp;amp;ofmt_ctx-&amp;gt;pb, out_filename, AVIO_FLAG_WRITE);
+		if (ret &amp;lt; 0) {
+			printf( &amp;quot;Could not open output URL &#39;%s&#39;&amp;quot;, out_filename);
+			goto end;
+		}
+	}
+	//写文件头（Write file header）
+	ret = avformat_write_header(ofmt_ctx, NULL);
+	if (ret &amp;lt; 0) {
+		printf( &amp;quot;Error occurred when opening output URL\n&amp;quot;);
+		goto end;
+	}
+
+	start_time=av_gettime();
+	while (1) {
+		AVStream *in_stream, *out_stream;
+		//获取一个AVPacket（Get an AVPacket）
+		ret = av_read_frame(ifmt_ctx, &amp;amp;pkt);
+		if (ret &amp;lt; 0)
+			break;
+		//FIX：No PTS (Example: Raw H.264)
+		//Simple Write PTS
+		if(pkt.pts==AV_NOPTS_VALUE){
+			//Write PTS
+			AVRational time_base1=ifmt_ctx-&amp;gt;streams[videoindex]-&amp;gt;time_base;
+			//Duration between 2 frames (us)
+			int64_t calc_duration=(double)AV_TIME_BASE/av_q2d(ifmt_ctx-&amp;gt;streams[videoindex]-&amp;gt;r_frame_rate);
+			//Parameters
+			pkt.pts=(double)(frame_index*calc_duration)/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+			pkt.dts=pkt.pts;
+			pkt.duration=(double)calc_duration/(double)(av_q2d(time_base1)*AV_TIME_BASE);
+		}
+		//Important:Delay
+		if(pkt.stream_index==videoindex){
+			AVRational time_base=ifmt_ctx-&amp;gt;streams[videoindex]-&amp;gt;time_base;
+			AVRational time_base_q={1,AV_TIME_BASE};
+			int64_t pts_time = av_rescale_q(pkt.dts, time_base, time_base_q);
+			int64_t now_time = av_gettime() - start_time;
+			if (pts_time &amp;gt; now_time)
+				av_usleep(pts_time - now_time);
+
+		}
+
+		in_stream  = ifmt_ctx-&amp;gt;streams[pkt.stream_index];
+		out_stream = ofmt_ctx-&amp;gt;streams[pkt.stream_index];
+		/* copy packet */
+		//转换PTS/DTS（Convert PTS/DTS）
+		pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream-&amp;gt;time_base, out_stream-&amp;gt;time_base, (AVRounding)(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
+		pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream-&amp;gt;time_base, out_stream-&amp;gt;time_base, (AVRounding)(AV_ROUND_NEAR_INF|AV_ROUND_PASS_MINMAX));
+		pkt.duration = av_rescale_q(pkt.duration, in_stream-&amp;gt;time_base, out_stream-&amp;gt;time_base);
+		pkt.pos = -1;
+		//Print to Screen
+		if(pkt.stream_index==videoindex){
+			printf(&amp;quot;Send %8d video frames to output URL\n&amp;quot;,frame_index);
+			frame_index++;
+		}
+		//ret = av_write_frame(ofmt_ctx, &amp;amp;pkt);
+		ret = av_interleaved_write_frame(ofmt_ctx, &amp;amp;pkt);
+
+		if (ret &amp;lt; 0) {
+			printf( &amp;quot;Error muxing packet\n&amp;quot;);
+			break;
+		}
+		
+		av_free_packet(&amp;amp;pkt);
+		
+	}
+	//写文件尾（Write file trailer）
+	av_write_trailer(ofmt_ctx);
+end:
+	avformat_close_input(&amp;amp;ifmt_ctx);
+	/* close output */
+	if (ofmt_ctx &amp;amp;&amp;amp; !(ofmt-&amp;gt;flags &amp;amp; AVFMT_NOFILE))
+		avio_close(ofmt_ctx-&amp;gt;pb);
+	avformat_free_context(ofmt_ctx);
+	if (ret &amp;lt; 0 &amp;amp;&amp;amp; ret != AVERROR_EOF) {
+		printf( &amp;quot;Error occurred.\n&amp;quot;);
+		return -1;
+	}
+	return 0;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单写个Makefile来编译下&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;INCPATH=-I /usr/local/ffmpeg/include
+LIBPATH=-L /usr/local/ffmpeg/lib
+FLAGS=-lavformat -lavcodec -lavutil
+
+all:
+        gcc simplest_ffmpeg_streamer.cpp -g -o main $(INCPATH) $(LIBPATH) $(FLAGS)
+clean:
+        rm -rf main
+
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
