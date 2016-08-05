@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="Hugo 0.16-DEV" />
+    <title>SDL学习笔记之Hello world</title>
+    
+    
+    
+    <meta name="description" content="关于SDL库的学习笔记" />
+    <meta name="keywords" content='SDL,播放器框架' />
+    
+        <meta name="author" content="观山" />
+    
+    
+    <link href="" rel="alternate" type="application/rss+xml" title="观山的世界" />
+    <link rel="stylesheet" href="http://vrcoder.github.io/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://vrcoder.github.io/css/highlightjs-themes/androidstudio.css" />
+    <link rel="stylesheet" href="http://vrcoder.github.io/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="http://vrcoder.github.io/css/phlat.css" />
+</head>
+
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">观山的世界</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                
+                    <li>
+                        <a href="/">
+                            Home
+                        </a>
+                    </li>
+                
+                    <li>
+                        <a href="/%E5%85%B3%E4%BA%8E%E6%88%91/">
+                            About
+                        </a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</nav>
+
+        <div id="top" class="container">
+            <div class="row" id="content-main">
+                <div class="col-md-8">
+                    <div class="row">
+    <div class="col-md-12 content-card">
+        <h1>SDL学习笔记之Hello world</h1>
+        
+            
+            <ul class="list-inline meta">
+                <li><i class="fa fa-calendar"></i>August 5, 2016</li>
+                <li><i class="fa fa-user"></i>观山</li>
+                <li><i class="fa fa-folder"></i><a href="http://vrcoder.github.io/categories/%E6%8A%80%E6%9C%AF">技术</a>, <a href="http://vrcoder.github.io/categories/%E8%A7%86%E9%A2%91">视频</a></li>
+            </ul>
+        
+        
+    <ul class="list-inline share" style="margin-top: 15px; margin-left: 0px">
+        <li class="facebook-share"><a target="_blank" href="http://www.facebook.com/sharer.php?u=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f"><i class="fa fa-facebook fa-lg"></i>Facebook</a></li>
+        <li class="googleplus-share"><a target="_blank" href="https://plus.google.com/share?url=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f"><i class="fa fa-google-plus fa-lg"></i>Google+</a></li>
+        <li class="twitter-share"><a target="_blank" href="https://twitter.com/share?url=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f&amp;text=SDL%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0%e4%b9%8bHello%20world"><i class="fa fa-twitter fa-lg"></i>Twitter</a></li>
+        <li class="reddit-share"><a target="_blank" href="http://reddit.com/submit?url=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f&amp;title=SDL%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0%e4%b9%8bHello%20world"><i class="fa fa-reddit fa-lg"></i>Reddit</a></li>
+        <li class="linkedin-share"><a target="_blank" href="http://www.linkedin.com/shareArticle?mini=true&url=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f"><i class="fa fa-linkedin fa-lg"></i>LinkedIn</a></li>
+        <li class="stumbleupon-share"><a target="_blank" href="http://www.stumbleupon.com/submit?url=http%3a%2f%2fvrcoder.github.io%2f2016%2f08%2fsdl%25E5%25AD%25A6%25E4%25B9%25A0%25E7%25AC%2594%25E8%25AE%25B0%25E4%25B9%258Bhello-world%2f&amp;title=SDL%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0%e4%b9%8bHello%20world"><i class="fa fa-stumbleupon fa-lg"></i>StumbleUpon</a></li>
+    </ul>
+
+
+        
+
+<h2 id="什么是sdl:f3fc397938172c6e6799f93df0043ceb">什么是SDL？</h2>
+
+<p>SDL，英文全称(Simple DirectMedia Layer), 是一套开放源代码的跨平台多媒体开发库。SDL提供了数种控制图像、声音输入输出的函数，目前多用于媒体播放器、游戏开发等多媒体应用领域。</p>
+
+<p>目前的稳定版本是2.0.4,与1.2.x版本接口差别很大。</p>
+
+<p>开始接触SDL主要是因为最近在看雷霄骅博士的文章<a href="http://blog.csdn.net/leixiaohua1020/article/details/38868499">《最简单的基于FFMPEG+SDL的视频播放器 ver2 （采用SDL2.0）》</a>，里面用到了很多SDL的东西，决定系统的了解下SDL。研究了两天，我最大的感受就是SDL使用简单方便，可以很轻松的绘制窗口、加载图片、视频等等。</p>
+
+<h2 id="安装sdl:f3fc397938172c6e6799f93df0043ceb">安装SDL</h2>
+
+<p>Ubuntu: sudo apt-get install libsdl2-dev
+Mac: brew install sdl2
+其他PC类似以上操作。</p>
+
+<h2 id="sdl的hello-world:f3fc397938172c6e6799f93df0043ceb">SDL的Hello world</h2>
+
+<p>学习内容主要参考<a href="http://www.willusher.io/pages/sdl2/">官方wiki上给的参考手册</a>, 在此主要做一个简单的翻译和整理。直接贴代码，在代码上进行说明：</p>
+
+<pre><code class="language-c++">
+#include &lt;stdio.h&gt;
+// 引入头文件，地址根据安装地址结合Makefile地址而定
+#include &lt;SDL2/SDL.h&gt;
+
+/**
+ * 主要功能：创建窗口并加载BMP图像
+ */
+
+
+int main(int argc, char *argv[])
+{
+    /**
+     * SDL的初始化，参数可以根据使用需要加入各种不同的标志位。
+     * 这里仅初始化音视频相关模块。
+     * 如果视频模块被初始化了，那么事件处理系统会自动被初始化。
+     * 文件IO和线程模块自动初始化。
+     */
+    if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)&lt;0)
+    {
+        printf(&quot;Unable to initialize SDL: %s \n&quot;, SDL_GetError());
+        exit(1);
+    }
+
+    /**
+     * 创建窗口，用于显示渲染的图像。
+     * 第一个参数是窗口的标题
+     * 第二三个参数分别是窗口的x和y坐标
+     * 第四五个参数是要绘制的窗口的宽度和高度
+     * 最后一个参数是设置窗口的属性信息
+     * 返回一个SDL_Window*, 若有错误返回NULL。
+     * 相关参数可以查看WIKI的接口说明：http://wiki.libsdl.org/SDL_CreateWindow
+     */
+    SDL_Window *win = SDL_CreateWindow(&quot;Hello, world!&quot;, 100, 100, 640,480,SDL_WINDOW_SHOWN);
+    if(win == NULL) {
+        printf(&quot;SDL_CreateWindow Error: %s \n&quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 初始化渲染上下文。
+     * 第一个参数与窗口建立关联
+     * 第二个参数指定渲染驱动，如果是-1的话，就初始化满足标志位需求的第一个
+     * 第三个参数标志位用来指定我们想要哪种渲染器
+     * 返回一个SDL_Renderer*, 若有错误返回NULL
+     * 相关参数可以查看WIKI的接口说明：http://wiki.libsdl.org/SDL_CreateRenderer 
+     */
+
+    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (ren == NULL) {
+        SDL_DestroyWindow(win);
+
+        printf(&quot;SDL_CreateRenderer Error: %s \n&quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 加载本地BMP图片，返回一个Surface。
+     * SDL只提供了BMP图片的加载，要加载其他图片，可以使用扩展库SDL_image
+     * 若返回NULL，则以此回收和释放上面申请的内存空间，并关闭SDL。下同
+     */
+    SDL_Surface *bmp = SDL_LoadBMP(&quot;test.bmp&quot;);
+    if(bmp == NULL) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        printf(&quot;SDL_LoadBMP Error: %s\n&quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 根据Surface创建纹理，然后释放Surface，释放内存
+     */
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
+    SDL_FreeSurface(bmp);
+    if(tex == NULL) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        printf(&quot;SDL_CreateTextureFromSurface Error: %s \n&quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 使纹理显示在屏幕上
+     * 分三步：1. 清空渲染器；2. 渲染纹理；3.显示纹理
+     * 使用了延迟让图片在窗口关闭前显示
+     * 后续会有Event处理机制来更好的处理此类问题
+     */
+    for (int i = 0; i &lt; 3; ++i) {
+        SDL_RenderClear(ren);
+        // 此时让整个图片充满整个窗口，所以后两个参数为空。
+        // 可以根据后两个参数指定图片位置，后面再整理相关demo说明
+        SDL_RenderCopy(ren, tex, NULL, NULL);
+        SDL_RenderPresent(ren);
+        // 设置1000毫秒的延迟，否则窗口会立马关闭，导致看不到图像
+        SDL_Delay(1000);
+    }
+    /**
+     * 释放各种指针并退出SDL
+     */
+    SDL_DestroyTexture(tex);
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+    return 0;
+}
+
+</code></pre>
+
+<p>简单配个Makefile</p>
+
+<pre><code>INCPATH=-I /usr/include
+LIBPATH=-L /usr/lib
+FLAG=-lSDL2main -lSDL2 -std=c++11
+
+all:
+	gcc -o main main.cpp $(FLAG) $(INCPATH) $(LIBPATH)
+clean:
+	rm -rf main
+</code></pre>
+
+<p>完整程序会在github上更新：<a href="https://github.com/vrcoder/learning_SDL">https://github.com/vrcoder/learning_SDL</a></p>
+
+<h2 id="参考资料:f3fc397938172c6e6799f93df0043ceb">参考资料</h2>
+
+<ul>
+<li><a href="http://baike.baidu.com/subview/8348/16851095.htm#viewPageContent">SDL百度百科</a></li>
+<li><a href="http://blog.csdn.net/leixiaohua1020/">雷霄骅博客地址</a></li>
+<li><a href="http://libsdl.org/">SDL官方页面</a></li>
+<li><a href="http://wiki.libsdl.org/">API使用说明</a></li>
+</ul>
+
+        
+    <ul class="list-inline tags" style="margin-top: 15px; margin-left: 0px">
+        
+            <li style=""><a href="http://vrcoder.github.io/tags/sdl">SDL</a></li>
+        
+            <li style=""><a href="http://vrcoder.github.io/tags/%E6%92%AD%E6%94%BE%E5%99%A8%E6%A1%86%E6%9E%B6">播放器框架</a></li>
+        
+    </ul>
+
+
+    </div>
+</div>
+
+                    
+    
+        <div class="row">
+            <div class="col-md-12 content-card">
+                <div id="disqus_thread"></div>
+                <script>
+                    (function() {
+                        if (window.location.hostname == "localhost") {
+                            document.write("Disqus comments are unavailable while serving on localhost or 127.0.0.1");
+                            return;
+                        }
+                        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                        var disqus_shortname = 'shortname';
+                        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();
+                </script>
+                <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+            </div>
+        </div>
+    
+
+
+                </div>
+                <div class="col-md-4">
+                    <div class="row">
+    <div class="col-md-11 col-md-offset-1 card">
+        <h5>Search</h5>
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form">
+            <div class="input-group">
+                <input class="form-control" type="search" name="q" />
+                <span class="input-group-btn">
+                    <button class="btn btn-custom" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
+            <input type="hidden" name="q" value="site:http://vrcoder.github.io/">
+        </form>
+    </div>
+</div>
+
+                    <div class="row">
+    <div class="col-md-11 col-md-offset-1 card">
+        <h5>Recent Posts</h5>
+        <ul class="list-unstyled posts-recent">
+            
+                <li><a href="http://vrcoder.github.io/2016/08/sdl%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8Bhello-world/">SDL学习笔记之Hello world</a></li>
+            
+                <li><a href="http://vrcoder.github.io/2016/06/rtmp%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%90%AD%E5%BB%BA%E4%BB%A5%E5%8F%8A%E6%8E%A8%E6%B5%81%E7%A8%8B%E5%BA%8Fdemo/">rtmp服务器搭建以及推流程序demo</a></li>
+            
+                <li><a href="http://vrcoder.github.io/2016/06/%E6%80%8E%E6%A0%B7%E8%AE%A9%E4%B8%80%E4%B8%AA%E6%AD%A3%E5%B8%B8%E4%BA%BA%E7%90%86%E8%A7%A3%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/">怎样让一个正常人理解【线性代数】</a></li>
+            
+                <li><a href="http://vrcoder.github.io/2016/06/%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9%E6%96%B9%E6%B3%95%E4%B9%8B%E5%8D%A1%E6%96%B9%E6%A3%80%E9%AA%8C/">特征选择方法之卡方检验</a></li>
+            
+        </ul>
+    </div>
+</div>
+
+                    
+    <div class="row">
+        <div class="col-md-11 col-md-offset-1 card">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-XXXXXX"
+                data-ad-slot="9997956765"
+                data-ad-format="auto">
+            </ins>
+        </div>
+    </div>
+
+
+                    
+    
+        <div class="row">
+            <div class="col-md-11 col-md-offset-1 card">
+                <h5>categories</h5>
+                <ul class="list-unstyled posts-recent">
+                    
+                        <li><a href="http://vrcoder.github.io/categories/%E6%8A%80%E6%9C%AF">技术</a></li>
+                    
+                        <li><a href="http://vrcoder.github.io/categories/%E8%A7%86%E9%A2%91">视频</a></li>
+                    
+                        <li><a href="http://vrcoder.github.io/categories/%E6%95%B0%E5%AD%A6">数学</a></li>
+                    
+                </ul>
+            </div>
+        </div>
+    
+
+    
+
+
+                    <div class="row">
+    <div class="col-md-11 col-md-offset-1 card">
+        <h5>Support This Site</h5>
+        <p>
+            非常欢迎光临我的博客，希望对你有帮助！
+        </p>
+    </div>
+</div>
+
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-xs-6">
+    <ul class="list-inline links">
+        
+            <li>
+                <a href="/privacy-policy/">
+                    Privacy Policy
+                </a>
+            </li>
+        
+    </ul>
+</div>
+
+            <div class="col-md-4 col-xs-6">
+    <ul class="list-inline social-media">
+        
+            <li><a target="_blank" href="https://www.twitter.com/GuanShanVIP"><i class="fa fa-twitter fa-lg"></i></a></li>
+        
+        
+            <li><a target="_blank" href="https://plus.google.com/NAME_HERE"><i class="fa fa-google-plus-square fa-lg"></i></a></li>
+        
+        
+        
+            <li><a target="_blank" href="https://cn.linkedin.com/in/guanshanshan"><i class="fa fa-linkedin fa-lg"></i></a></li>
+        
+        
+            <li><a target="_blank" href="https://www.youtube.com/users/NAME_HERE"><i class="fa fa-youtube fa-lg"></i></a></li>
+        
+        
+            <li><a target="_blank" href="https://paypal.me/NAME_HERE"><i class="fa fa-paypal fa-lg"></i></a></li>
+        
+        
+        
+        
+        
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <p>
+                    <a href="https://github.com/nraboy/hugo-phlat-theme">Phlat Theme</a> designed and built by <a href="http://www.nraboy.com">Nic Raboy</a> in San Francisco, California.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script type="text/javascript"
+      src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+        <div id="back-to-top" class="hidden">
+    <a href="#top" class="well well-sm" onclick="$('html,body').animate({scrollTop:0},'slow');return false;">
+        <i class="glyphicon glyphicon-chevron-up"></i> Back to Top
+    </a>
+</div>
+<script src="http://vrcoder.github.io/js/jquery-2.2.1.min.js"></script>
+<script src="http://vrcoder.github.io/js/bootstrap.min.js"></script>
+<script src="http://vrcoder.github.io/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script>
+    if(($(window).height() + 100) < $(document).height()) {
+        $('#back-to-top').removeClass('hidden').affix({
+            offset: {
+                top: 100
+            }
+        });
+    }
+</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+    
+        
+    
+    if (window.location.hostname == "localhost") {
+        $(".adsbygoogle").css("text-decoration", "none");
+        $(".adsbygoogle").text("Adsense is unavailable while serving on localhost or 127.0.0.1");
+    } else {
+        [].forEach.call(document.querySelectorAll('.adsbygoogle'), function() {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        });
+    }
+</script>
+
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-XXXXX-YY', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+
+
+
+    </body>
+</html>

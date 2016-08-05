@@ -6,8 +6,171 @@
     <description>Recent content on 观山的世界</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Jun 2016 22:03:16 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 05 Aug 2016 21:59:40 +0800</lastBuildDate>
     <atom:link href="http://vrcoder.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>SDL学习笔记之Hello world</title>
+      <link>http://vrcoder.github.io/2016/08/sdl%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8Bhello-world/</link>
+      <pubDate>Fri, 05 Aug 2016 21:59:40 +0800</pubDate>
+      
+      <guid>http://vrcoder.github.io/2016/08/sdl%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%E4%B9%8Bhello-world/</guid>
+      <description>
+
+&lt;h2 id=&#34;什么是sdl:f3fc397938172c6e6799f93df0043ceb&#34;&gt;什么是SDL？&lt;/h2&gt;
+
+&lt;p&gt;SDL，英文全称(Simple DirectMedia Layer), 是一套开放源代码的跨平台多媒体开发库。SDL提供了数种控制图像、声音输入输出的函数，目前多用于媒体播放器、游戏开发等多媒体应用领域。&lt;/p&gt;
+
+&lt;p&gt;目前的稳定版本是2.0.4,与1.2.x版本接口差别很大。&lt;/p&gt;
+
+&lt;p&gt;开始接触SDL主要是因为最近在看雷霄骅博士的文章&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/article/details/38868499&#34;&gt;《最简单的基于FFMPEG+SDL的视频播放器 ver2 （采用SDL2.0）》&lt;/a&gt;，里面用到了很多SDL的东西，决定系统的了解下SDL。研究了两天，我最大的感受就是SDL使用简单方便，可以很轻松的绘制窗口、加载图片、视频等等。&lt;/p&gt;
+
+&lt;h2 id=&#34;安装sdl:f3fc397938172c6e6799f93df0043ceb&#34;&gt;安装SDL&lt;/h2&gt;
+
+&lt;p&gt;Ubuntu: sudo apt-get install libsdl2-dev
+Mac: brew install sdl2
+其他PC类似以上操作。&lt;/p&gt;
+
+&lt;h2 id=&#34;sdl的hello-world:f3fc397938172c6e6799f93df0043ceb&#34;&gt;SDL的Hello world&lt;/h2&gt;
+
+&lt;p&gt;学习内容主要参考&lt;a href=&#34;http://www.willusher.io/pages/sdl2/&#34;&gt;官方wiki上给的参考手册&lt;/a&gt;, 在此主要做一个简单的翻译和整理。直接贴代码，在代码上进行说明：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-c++&#34;&gt;
+#include &amp;lt;stdio.h&amp;gt;
+// 引入头文件，地址根据安装地址结合Makefile地址而定
+#include &amp;lt;SDL2/SDL.h&amp;gt;
+
+/**
+ * 主要功能：创建窗口并加载BMP图像
+ */
+
+
+int main(int argc, char *argv[])
+{
+    /**
+     * SDL的初始化，参数可以根据使用需要加入各种不同的标志位。
+     * 这里仅初始化音视频相关模块。
+     * 如果视频模块被初始化了，那么事件处理系统会自动被初始化。
+     * 文件IO和线程模块自动初始化。
+     */
+    if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO)&amp;lt;0)
+    {
+        printf(&amp;quot;Unable to initialize SDL: %s \n&amp;quot;, SDL_GetError());
+        exit(1);
+    }
+
+    /**
+     * 创建窗口，用于显示渲染的图像。
+     * 第一个参数是窗口的标题
+     * 第二三个参数分别是窗口的x和y坐标
+     * 第四五个参数是要绘制的窗口的宽度和高度
+     * 最后一个参数是设置窗口的属性信息
+     * 返回一个SDL_Window*, 若有错误返回NULL。
+     * 相关参数可以查看WIKI的接口说明：http://wiki.libsdl.org/SDL_CreateWindow
+     */
+    SDL_Window *win = SDL_CreateWindow(&amp;quot;Hello, world!&amp;quot;, 100, 100, 640,480,SDL_WINDOW_SHOWN);
+    if(win == NULL) {
+        printf(&amp;quot;SDL_CreateWindow Error: %s \n&amp;quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 初始化渲染上下文。
+     * 第一个参数与窗口建立关联
+     * 第二个参数指定渲染驱动，如果是-1的话，就初始化满足标志位需求的第一个
+     * 第三个参数标志位用来指定我们想要哪种渲染器
+     * 返回一个SDL_Renderer*, 若有错误返回NULL
+     * 相关参数可以查看WIKI的接口说明：http://wiki.libsdl.org/SDL_CreateRenderer 
+     */
+
+    SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (ren == NULL) {
+        SDL_DestroyWindow(win);
+
+        printf(&amp;quot;SDL_CreateRenderer Error: %s \n&amp;quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 加载本地BMP图片，返回一个Surface。
+     * SDL只提供了BMP图片的加载，要加载其他图片，可以使用扩展库SDL_image
+     * 若返回NULL，则以此回收和释放上面申请的内存空间，并关闭SDL。下同
+     */
+    SDL_Surface *bmp = SDL_LoadBMP(&amp;quot;test.bmp&amp;quot;);
+    if(bmp == NULL) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        printf(&amp;quot;SDL_LoadBMP Error: %s\n&amp;quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 根据Surface创建纹理，然后释放Surface，释放内存
+     */
+    SDL_Texture *tex = SDL_CreateTextureFromSurface(ren, bmp);
+    SDL_FreeSurface(bmp);
+    if(tex == NULL) {
+        SDL_DestroyRenderer(ren);
+        SDL_DestroyWindow(win);
+        printf(&amp;quot;SDL_CreateTextureFromSurface Error: %s \n&amp;quot;, SDL_GetError());
+        SDL_Quit();
+        return 1;
+    }
+
+    /**
+     * 使纹理显示在屏幕上
+     * 分三步：1. 清空渲染器；2. 渲染纹理；3.显示纹理
+     * 使用了延迟让图片在窗口关闭前显示
+     * 后续会有Event处理机制来更好的处理此类问题
+     */
+    for (int i = 0; i &amp;lt; 3; ++i) {
+        SDL_RenderClear(ren);
+        // 此时让整个图片充满整个窗口，所以后两个参数为空。
+        // 可以根据后两个参数指定图片位置，后面再整理相关demo说明
+        SDL_RenderCopy(ren, tex, NULL, NULL);
+        SDL_RenderPresent(ren);
+        // 设置1000毫秒的延迟，否则窗口会立马关闭，导致看不到图像
+        SDL_Delay(1000);
+    }
+    /**
+     * 释放各种指针并退出SDL
+     */
+    SDL_DestroyTexture(tex);
+    SDL_DestroyRenderer(ren);
+    SDL_DestroyWindow(win);
+    SDL_Quit();
+    return 0;
+}
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单配个Makefile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;INCPATH=-I /usr/include
+LIBPATH=-L /usr/lib
+FLAG=-lSDL2main -lSDL2 -std=c++11
+
+all:
+	gcc -o main main.cpp $(FLAG) $(INCPATH) $(LIBPATH)
+clean:
+	rm -rf main
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;完整程序会在github上更新：&lt;a href=&#34;https://github.com/vrcoder/learning_SDL&#34;&gt;https://github.com/vrcoder/learning_SDL&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考资料:f3fc397938172c6e6799f93df0043ceb&#34;&gt;参考资料&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://baike.baidu.com/subview/8348/16851095.htm#viewPageContent&#34;&gt;SDL百度百科&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/&#34;&gt;雷霄骅博客地址&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://libsdl.org/&#34;&gt;SDL官方页面&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://wiki.libsdl.org/&#34;&gt;API使用说明&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>rtmp服务器搭建以及推流程序demo</title>
@@ -19,7 +182,7 @@
 
 &lt;p&gt;汇总下前段时间用的工具：使用开源程序SRS和ffmpeg搭建推流程序的demo。&lt;/p&gt;
 
-&lt;h2 id=&#34;准备工作&#34;&gt;准备工作&lt;/h2&gt;
+&lt;h2 id=&#34;准备工作:8da16a0d8489cde3951ef0acdde70416&#34;&gt;准备工作&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Linux服务器一台&lt;/li&gt;
@@ -28,7 +191,7 @@
 &lt;li&gt;&lt;a href=&#34;http://ffmpeg.org/download.html&#34;&gt;ffmpeg&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;安装srs&#34;&gt;安装srs&lt;/h2&gt;
+&lt;h2 id=&#34;安装srs:8da16a0d8489cde3951ef0acdde70416&#34;&gt;安装srs&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;git &lt;a href=&#34;https://github.com/smartdu/srs.git&#34;&gt;https://github.com/smartdu/srs.git&lt;/a&gt;&lt;/li&gt;
@@ -38,7 +201,7 @@
 &lt;li&gt;其他详见项目&lt;a href=&#34;https://github.com/ossrs/srs/wiki&#34;&gt;wiki&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;安装ffmpeg&#34;&gt;安装ffmpeg&lt;/h2&gt;
+&lt;h2 id=&#34;安装ffmpeg:8da16a0d8489cde3951ef0acdde70416&#34;&gt;安装ffmpeg&lt;/h2&gt;
 
 &lt;ol&gt;
 &lt;li&gt;git clone &lt;a href=&#34;https://git.ffmpeg.org/ffmpeg.git&#34;&gt;https://git.ffmpeg.org/ffmpeg.git&lt;/a&gt; ffmpeg&lt;/li&gt;
@@ -50,7 +213,7 @@
 &lt;li&gt;ldconfig,使上面的改动生效&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;推流demo&#34;&gt;推流demo&lt;/h2&gt;
+&lt;h2 id=&#34;推流demo:8da16a0d8489cde3951ef0acdde70416&#34;&gt;推流demo&lt;/h2&gt;
 
 &lt;p&gt;&lt;a href=&#34;http://blog.csdn.net/leixiaohua1020/article/details/39803457&#34;&gt;代码来自雷霄骅博士的博客&lt;/a&gt;&lt;/p&gt;
 
@@ -331,7 +494,7 @@ with Mathematics（《数学概观》）以及Thomas A. Garrity的《数学拾�
 
 &lt;p&gt;今天先谈谈对线形空间和矩阵的几个核心概念的理解。这些东西大部分是凭着自己的理解写出来的，基本上不抄书，可能有错误的地方，希望能够被指出。但我希望做到直觉，也就是说能把数学背后说的实质问题说出来。&lt;/p&gt;
 
-&lt;h2 id=&#34;什么是空间&#34;&gt;什么是空间&lt;/h2&gt;
+&lt;h2 id=&#34;什么是空间:9944b4b9015267c89641b14b65eb0512&#34;&gt;什么是空间&lt;/h2&gt;
 
 &lt;p&gt;首先说说空间(space)，这个概念是现代数学的命根子之一，从拓扑空间开始，一步步往上加定义，可以形成很多空间。线性空间其实还是比较初级的，如果在里面定义了范数，就成了赋范线性空间。赋范线性空间满足完备性，就成了巴那赫空间；赋范线性空间中定义角度，就有了内积空间，内积空间再满足完备性，就得到希尔伯特空间。&lt;/p&gt;
 
@@ -375,7 +538,7 @@ with Mathematics（《数学概观》）以及Thomas A. Garrity的《数学拾�
 
 &lt;hr /&gt;
 
-&lt;h2 id=&#34;什么是矩阵&#34;&gt;什么是矩阵&lt;/h2&gt;
+&lt;h2 id=&#34;什么是矩阵:9944b4b9015267c89641b14b65eb0512&#34;&gt;什么是矩阵&lt;/h2&gt;
 
 &lt;p&gt;下面来回答第二个问题，这个问题的回答会涉及到线性代数的一个最根本的问题。&lt;/p&gt;
 
@@ -456,10 +619,10 @@ $$A = P^{-1}BP$$&lt;/p&gt;
 &lt;p&gt;$$
 \left[
 \begin{matrix}
- a11      &amp;amp; a12      &amp;amp; \cdots &amp;amp; a1n   &lt;br /&gt;
- a21      &amp;amp; a22     &amp;amp; \cdots &amp;amp; a2n    &lt;br /&gt;
- \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots    &lt;br /&gt;
- an1      &amp;amp; an2     &amp;amp; \cdots &amp;amp; ann    &lt;br /&gt;
+ a11      &amp;amp; a12      &amp;amp; \cdots &amp;amp; a1n   \
+ a21      &amp;amp; a22     &amp;amp; \cdots &amp;amp; a2n    \
+ \vdots &amp;amp; \vdots &amp;amp; \ddots &amp;amp; \vdots    \
+ an1      &amp;amp; an2     &amp;amp; \cdots &amp;amp; ann    \
 \end{matrix}
 \right]
 $$&lt;/p&gt;
@@ -551,8 +714,8 @@ $$&lt;/p&gt;
 $$
 \left[
 \begin{matrix}
- 2 &amp;amp;0  &lt;br /&gt;
- 0 &amp;amp;3  &lt;br /&gt;
+ 2 &amp;amp;0  \
+ 0 &amp;amp;3  \
 \end{matrix}
 \right]
 $$
@@ -563,8 +726,8 @@ $$
 &lt;p&gt;$$
 \left[
 \begin{matrix}
- 2 &amp;amp;0&lt;br /&gt;
- 0 &amp;amp;3&lt;br /&gt;
+ 2 &amp;amp;0\
+ 0 &amp;amp;3\
  \end{matrix}
  \right]
 $$&lt;/p&gt;
@@ -574,8 +737,8 @@ $$&lt;/p&gt;
 &lt;p&gt;$$
 \left[
 \begin{matrix}
- \frac{1}{2} &amp;amp;0&lt;br /&gt;
- 0 &amp;amp; \frac{1}{3}&lt;br /&gt;
+ \frac{1}{2} &amp;amp;0\
+ 0 &amp;amp; \frac{1}{3}\
  \end{matrix}
  \right]
 $$&lt;/p&gt;
